@@ -23,9 +23,9 @@ function disable_auto_updates_as_needed(): void {
 	$disableAutoUpdates = ! $dayIsOk;
 
 	if ( $disableAutoUpdates ) {
-		add_filter( 'automatic_updater_disabled', '__return_true' );
+		add_filter( 'automatic_updater_disabled', '__return_true', 100 );
 	} else {
-		add_filter( 'automatic_updater_disabled', '__return_false' );
+		add_filter( 'automatic_updater_disabled', '__return_false', 100 );
 	}
 }
 
