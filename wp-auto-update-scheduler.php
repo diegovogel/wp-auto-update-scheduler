@@ -1,5 +1,13 @@
 <?php
 
+if ( ! defined( 'AUS_TARGET_DAYS')) {
+	define( 'AUS_TARGET_DAYS', [ 1, 2, 3, 4, 5] );
+}
+
+if ( ! defined( 'AUS_TARGET_HOUR')) {
+	define( 'AUS_TARGET_HOUR', 01 );
+}
+
 add_action('init', 'disable_auto_updates_as_needed');
 add_action('init', 'set_auto_update_schedule');
 
@@ -10,9 +18,8 @@ add_action('init', 'set_auto_update_schedule');
  */
 function disable_auto_updates_as_needed(): void {
 	$currentDayOfWeek = intval( current_datetime()->format( 'N' ) );
-	$targetDays       = [ 1, 2, 3, 4, 5 ]; // Weekdays
 
-	$dayIsOk            = in_array( $currentDayOfWeek, $targetDays );
+	$dayIsOk            = in_array( $currentDayOfWeek, AUS_TARGET_DAYS );
 	$disableAutoUpdates = ! $dayIsOk;
 
 	if ( $disableAutoUpdates ) {
@@ -30,11 +37,10 @@ function disable_auto_updates_as_needed(): void {
  * and creates a new one at the specified time. If no update is scheduled, it initiates a new schedule.
  *
  * @return void
- * @throws Exception If the target day cannot be determined.
- * @throws DateMalformedStringException
+ * @throws DateMalformedStringException // This is handled gracefully but adding here to appease PhpStorm.
  */
 function set_auto_update_schedule(): void {
-	$targetHour = 01;
+	$targetHour = AUS_TARGET_HOUR;
 	$now        = current_datetime();
 	$timezone   = $now->getTimezone();
 
@@ -44,11 +50,19 @@ function set_auto_update_schedule(): void {
 	if ( $currentHour < $targetHour ) {
 		$targetDay = $now->format( 'Y-m-d' );
 	} else {
-		$targetDay = $now->modify( '+1 day' )?->format( 'Y-m-d' );
+		try {
+			$targetDay = $now->modify( '+1 day' )?->format( 'Y-m-d' );
+		} catch ( DateMalformedStringException $e ) {
+			error_log('Could not modify current date to get target day: ' . $e->getMessage());
+			
+			$targetDay = null;
+		}
 	}
 
 	if ( ! $targetDay ) {
-		throw new Exception( 'Could not determine target day.' );
+		error_log('Could not determine target day');
+		
+		return;
 	}
 
 	$targetTime         = new DateTime( "{$targetDay} {$targetHour}:30:00", $timezone );
