@@ -1,0 +1,69 @@
+# Birdboar gitignore for plugins.
+# Based on Bare Minimum Git: https://salferrarello.com/starter-gitignore-file/
+# --------------------------------------------------------------
+# NOTES:
+#
+# /vendor, /build, and /dist are commonly ignored directories, but these need to be included in the repo when using Plugin Update Checker to deploy theme updates (unless you add a build step to the deployment process).
+#
+# To ignore uncommitted changes in a file that is already tracked,
+# use `git update-index --assume-unchanged`.
+#
+# To stop tracking a file that is currently tracked,
+# use `git rm --cached`
+#
+# --------------------------------------------------------------
+# ignore all files starting with . or ~
+.*
+~*
+
+# Out of the box, this starter plugin only uses NPM packages for development. If you need any in production and use Plugin Update Checker to deploy theme updates, you'll need to remove the following line or whitelist the packages you need (or set up a build step in the deployment process).
+node_modules/
+
+# ignore OS generated files
+ehthumbs.db
+Thumbs.db
+
+# ignore Editor files
+*.sublime-project
+*.sublime-workspace
+*.komodoproject
+
+# ignore log files and databases
+*.log
+*.sql
+*.sqlite
+
+# ignore compiled files
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# ignore packaged files
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# ignore private/secret files
+*.der
+*.key
+*.pem
+
+# --------------------------------------------------------
+# BEGIN Explicitly Allowed Files (i.e. do NOT ignore these)
+# --------------------------------------------------------
+
+# track these files, if they exist
+!.editorconfig
+!.env.example
+!.git-blame-ignore-revs
+!.gitignore
+!.nvmrc
+!.phpcs.xml.dist
