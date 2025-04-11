@@ -8,6 +8,10 @@ if ( ! defined( 'AUS_TARGET_HOUR')) {
 	define( 'AUS_TARGET_HOUR', 01 );
 }
 
+if ( ! defined( 'AUS_PRIORITY' ) ) {
+	define( 'AUS_PRIORITY', 100 );
+}
+
 add_action('init', 'disable_auto_updates_as_needed');
 add_action('init', 'set_auto_update_schedule');
 
@@ -23,9 +27,9 @@ function disable_auto_updates_as_needed(): void {
 	$disableAutoUpdates = ! $dayIsOk;
 
 	if ( $disableAutoUpdates ) {
-		add_filter( 'automatic_updater_disabled', '__return_true', 100 );
+		add_filter( 'automatic_updater_disabled', '__return_true', AUS_PRIORITY );
 	} else {
-		add_filter( 'automatic_updater_disabled', '__return_false', 100 );
+		add_filter( 'automatic_updater_disabled', '__return_false', AUS_PRIORITY );
 	}
 }
 
